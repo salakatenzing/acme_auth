@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const {
-  models: { User },
+  models: { User, Note },
 } = require('./db');
 const path = require('path');
 
@@ -15,6 +15,18 @@ app.post('/api/auth', async (req, res, next) => {
     next(ex);
   }
 });
+app.get('/api/users/:token/notes', async (req, res, next) => {
+  try {
+    const user = await User.byToken(req.params.token)
+    // console.log(user)
+    const notes = user.notes;
+    // console.log(user.username)
+    console.log(notes)
+    res.status(200).send(notes);
+  }catch(err) {
+    next(err);
+  }
+})
 
 app.get('/api/auth', async (req, res, next) => {
   try {
